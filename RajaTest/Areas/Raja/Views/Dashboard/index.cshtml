@@ -1,0 +1,161 @@
+@model IEnumerable<Repositories.Data.Models.User>
+@{
+    ViewData["Title"] = "index";
+    Layout = "~/Areas/Raja/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center">
+    <h1 style="align-content: center">Raja Test Application</h1>
+    <hr />
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">لیست مدارک کاربر</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="userTable" dir="rtl" class=" table table-style">
+                            <thead class="table-dark" dir="rtl">
+                                <tr>
+                                    <th dir="rtl">
+                                        عنوان مدرک
+                                    </th>
+                                    <th>
+                                        نوع مدرک
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                    <td>
+                                        تست 1
+                                    </td>
+                                    <td>
+                                        تست 2
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div style="white-space: nowrap" class="container mt_30" dir="rtl">
+        <div class="row">
+            <div dir="rtl" class="col mtb_20">
+                <!-- contact  -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="mb-3">
+                            <a style="color: #FFFFFF" asp-action="Create" class="btn btn-primary">ساخت کاربر جدید</a>
+                        </p>
+                        <div class="table-responsive">
+                            <table id="userTable" dir="rtl" class=" table table-style">
+                                <thead class="table-dark" dir="rtl">
+                                    <tr>
+                                        <th dir="rtl">
+                                            @Html.DisplayNameFor(model => model.FirstName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.LastName)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.PhoneNumber)
+                                        </th>
+                                        <th>
+                                            عملیات
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.FirstName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LastName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(model => item.PhoneNumber)
+                                            </td>
+                                            <td class="col">
+                                                <a href="#" class="btn btn-sm btn-success view-documents" data-userid="@item.Id">مشاهده مدارک</a>
+                                                <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-sm btn-primary">ویرایش</a>
+                                                <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-danger">حذف</a>
+                                                <a href="@Url.Action("CertEdit", new { id = item.Id })" class="btn btn-sm btn-secondary">ویرایش مدارک</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#userTable').DataTable();
+        });
+    </script>
+    <script>
+
+        $(".view-documents").on("click", function () {
+            var userId = $(this).data("userid");
+
+            $.ajax({
+                url: 'Raja/Dashboard/GetUserCertificates',
+                type: 'GET',
+                data: { userId: userId },
+                success: function (data) {
+
+                    var modalTable = $("#exampleModal table tbody");
+                    modalTable.empty();
+
+                    //console.log(data);
+
+                    $.each(data.$values, function (index, certificate) {
+                        console.log(data);
+                        console.log(certificate.certificateName);
+                        console.log(certificate.certificateTypeName);
+                        var row = "<tr>";
+                        row += "<td>" + certificate.certificateName + "</td>";
+                        row += "<td>" + certificate.certificateTypeName + "</td>";
+                        row += "</tr>";
+                        modalTable.append(row);
+                    });
+
+
+                    $('#exampleModal').modal('show');
+                },
+                error: function () {
+                    alert("خطا در دریافت اطلاعات مدارک.");
+                }
+            });
+        });
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}
+

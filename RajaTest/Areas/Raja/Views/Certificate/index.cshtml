@@ -1,0 +1,73 @@
+@model IEnumerable<Repositories.Data.Models.Certificate>
+@{
+    ViewData["Title"] = "مدارک";
+    Layout = "~/Areas/Raja/Views/Shared/_Layout.cshtml";
+}
+<div  class="text-center">
+    <h1 style="align-content: center">Raja Test Application</h1>
+    <hr/>
+    
+    <div style="white-space: nowrap" class="container mt_30" dir="rtl">
+        <div class="row">
+            <div dir="rtl" class="col mtb_20">
+                <!-- contact  -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="mb-3">
+                            <a style="color: #FFFFFF" asp-action="Create" class="btn btn-primary">ساخت مدرک جدید</a>
+                        </p>
+                        <div class="table-responsive">
+                            <table id="userTable" dir="rtl" class=" table table-style">
+                                <thead class="table-dark" dir="rtl">
+                                    <tr>
+                                        <th dir="rtl">
+                                            @Html.DisplayNameFor(model => model.Name)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Type)
+                                        </th>
+                                        <th>
+                                            عملیات
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+    
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.TypeName)
+                                            </td>
+                                            <div class="col">
+                                            <td>
+                                                <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-sm btn-primary">ویرایش</a>
+                                                <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-danger">حذف</a>
+                                            </td>
+                            </div>
+                            </tr>
+                                    }
+                        </tbody>
+                        </table>
+                    </div>
+    
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#userTable').DataTable();
+        });
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}
+
